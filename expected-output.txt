@@ -1,0 +1,27 @@
+# Expected success criteria
+
+`bash scripts/verify.sh` must complete with exit status 0 and print all of the following:
+
+```text
+ALL CERTIFICATE CHECKS PASSED
+ALL CHECKS PASSED  ==> 同一本书对两方都是不败策略, 初始局面为平局
+PROOF ARTIFACT VERIFICATION PASSED
+```
+
+For `safe6.bin`, the C verifier must report:
+
+```text
+|S|                       : 91330
+S 中出现的黑方形状数      : 153
+|T| = |{INIT} u rho(S)|   : 91330
+(C1) 非法状态             : 0
+(C2) 黑方安全闭合违例     : 0
+(C3) both initial states in S : 1
+(C4) 白方安全闭合违例     : 0
+```
+
+`bash scripts/verify.sh --regenerate` additionally prints:
+
+```text
+DETERMINISTIC ARTIFACT REGENERATION PASSED
+```
