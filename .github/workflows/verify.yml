@@ -1,0 +1,26 @@
+name: Verify proof artifact
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Record environment
+        run: |
+          uname -a
+          gcc --version
+          python3 --version
+          sha256sum --version
+      - name: Verify and regenerate certificates
+        run: bash scripts/verify.sh --regenerate
