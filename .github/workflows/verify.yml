@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify:
@@ -24,3 +24,21 @@ jobs:
           sha256sum --version
       - name: Verify and regenerate certificates
         run: bash scripts/verify.sh --regenerate
+
+      - name: Build paper PDF
+        if: github.event_name != 'pull_request'
+        uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: paper
+          root_file: siege4x4.tex
+          args: -interaction=nonstopmode -halt-on-error
+
+      - name: Publish paper PDF
+        if: github.event_name != 'pull_request' && github.actor != 'github-actions[bot]'
+        run: |
+          test -f paper/siege4x4.pdf
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add paper/siege4x4.pdf
+          git diff --cached --quiet || git commit -m "Add compiled paper PDF"
+          git push
